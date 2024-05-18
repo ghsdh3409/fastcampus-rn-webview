@@ -30,6 +30,7 @@ const HomeTab = () => {
         },
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'white',
+        headerShown: false,
       }}>
       <Tab.Screen
         name={RouteNames.HOME}
