@@ -27,7 +27,7 @@ const HomeScreen = ({navigation}: Props) => {
           }
 
           if (request.url != null && request.url.startsWith('https://')) {
-            navigation.navigate(RouteNames.BROWSER);
+            navigation.navigate(RouteNames.BROWSER, {initialUrl: request.url});
             return false;
           }
 
