@@ -1,25 +1,69 @@
-import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {RootStackParamList, RouteNames} from '../routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {useCallback, useRef, useState} from 'react';
+import {
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import WebView from 'react-native-webview';
+import {RootStackParamList, RouteNames} from '../routes';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 
+const styles = StyleSheet.create({
+  safearea: {flex: 1},
+  contentContainerStyle: {flex: 1},
+});
+
+const SHOPPING_HOME_URL = 'https://shopping.naver.com/home';
+
 const ShoppingScreen = ({navigation}: Props) => {
+  const webViewRef = useRef<WebView>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    webViewRef.current?.reload();
+  }, []);
+
   return (
-    <View>
-      <Text>Shopping</Text>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate(RouteNames.BROWSER, {
-            initialUrl: 'https://m.naver.com',
-          });
-        }}>
-        <Text>Go To Browser</Text>
-      </TouchableOpacity>
-      <MaterialCommunityIcons name="shopping" size={200} color={'red'} />
-    </View>
+    <SafeAreaView style={styles.safearea}>
+      <ScrollView
+        contentContainerStyle={styles.contentContainerStyle}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        <WebView
+          ref={webViewRef}
+          source={{uri: SHOPPING_HOME_URL}}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onShouldStartLoadWithRequest={request => {
+            console.log(request);
+            if (
+              request.url.startsWith(SHOPPING_HOME_URL) ||
+              request.mainDocumentURL?.startsWith(SHOPPING_HOME_URL)
+            ) {
+              return true;
+            }
+
+            if (request.url != null && request.url.startsWith('https://')) {
+              navigation.navigate(RouteNames.BROWSER, {
+                initialUrl: request.url,
+              });
+              return false;
+            }
+
+            return true;
+          }}
+          onLoad={() => {
+            setRefreshing(false);
+          }}
+          renderLoading={() => <></>}
+          startInLoadingState={true}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
