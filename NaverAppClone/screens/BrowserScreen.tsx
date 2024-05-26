@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useContext, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   SafeAreaView,
@@ -12,6 +12,7 @@ import {
 import WebView from 'react-native-webview';
 import {RootStackParamList} from '../routes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {WebViewContext} from '../components/WebViewProvider';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'browser'>;
 
@@ -82,6 +83,7 @@ const NavButton = ({
 };
 
 const BrowserScreen = ({route, navigation}: Props) => {
+  const context = useContext(WebViewContext);
   const {initialUrl} = route.params;
   const [url, setUrl] = useState(initialUrl);
   const urlTitle = useMemo(
@@ -91,7 +93,7 @@ const BrowserScreen = ({route, navigation}: Props) => {
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
-  const webViewRef = useRef<WebView>(null);
+  const webViewRef = useRef<WebView | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
 
@@ -114,7 +116,12 @@ const BrowserScreen = ({route, navigation}: Props) => {
         />
       </View>
       <WebView
-        ref={webViewRef}
+        ref={ref => {
+          webViewRef.current = ref;
+          if (ref != null) {
+            context?.addWebView(ref);
+          }
+        }}
         source={{uri: initialUrl}}
         onNavigationStateChange={event => {
           setCanGoBack(event.canGoBack);

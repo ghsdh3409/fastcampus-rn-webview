@@ -3,9 +3,11 @@ export const RouteNames = {
   HOME: 'home' as const,
   SHOPPNIG: 'shopping' as const,
   BROWSER: 'browser' as const,
+  LOGIN: 'login' as const,
 };
 
 export type RootStackParamList = {
   [RouteNames.HOME_TAB]: undefined;
   [RouteNames.BROWSER]: {initialUrl: string};
+  [RouteNames.LOGIN]: undefined;
 };
