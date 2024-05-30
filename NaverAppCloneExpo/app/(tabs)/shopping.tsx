@@ -1,6 +1,7 @@
 import {router} from 'expo-router';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const ShoppingScreen = () => {
   return (
@@ -14,6 +15,7 @@ const ShoppingScreen = () => {
         }}>
         <Text>Go To Browser</Text>
       </TouchableOpacity>
+      <MaterialCommunityIcons name="shopping" size={50} color="red" />
     </View>
   );
 };
