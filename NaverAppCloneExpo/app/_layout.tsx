@@ -4,7 +4,7 @@ export default function Layout() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{headerShown: false}} />
-      <Stack.Screen name="browser" />
+      <Stack.Screen name="browser" options={{headerShown: false}} />
     </Stack>
   );
 }
