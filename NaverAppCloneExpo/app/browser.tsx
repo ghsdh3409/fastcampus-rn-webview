@@ -4,6 +4,7 @@ import {
   Animated,
   Platform,
   SafeAreaView,
+  Share,
   StatusBar,
   StyleSheet,
   Text,
@@ -159,6 +160,12 @@ const BrowserScreen = () => {
           iconName="refresh"
           onPress={() => {
             webViewRef.current?.reload();
+          }}
+        />
+        <NavButton
+          iconName="share-outline"
+          onPress={() => {
+            Share.share({message: url});
           }}
         />
       </View>
