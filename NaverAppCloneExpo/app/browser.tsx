@@ -1,5 +1,5 @@
 import {router, useLocalSearchParams} from 'expo-router';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useContext, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   Platform,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import WebView from 'react-native-webview';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import {WebViewContext} from '../components/WebViewProvider';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -85,6 +86,7 @@ const NavButton = ({
 };
 
 const BrowserScreen = () => {
+  const context = useContext(WebViewContext);
   const params = useLocalSearchParams();
   const initialUrl = params.initialUrl as string;
   const [url, setUrl] = useState(initialUrl);
@@ -118,7 +120,12 @@ const BrowserScreen = () => {
         />
       </View>
       <WebView
-        ref={webViewRef}
+        ref={ref => {
+          webViewRef.current = ref;
+          if (ref != null) {
+            context?.addWebView(ref);
+          }
+        }}
         source={{uri: initialUrl}}
         onNavigationStateChange={event => {
           setUrl(event.url);
