@@ -1,11 +1,9 @@
 import {router} from 'expo-router';
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {
-  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
 } from 'react-native';
 import WebView from 'react-native-webview';
@@ -13,7 +11,6 @@ import {WebViewContext} from '../../components/WebViewProvider';
 
 const styles = StyleSheet.create({
   safearea: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
   },
 });
