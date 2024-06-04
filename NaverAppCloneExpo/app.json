@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "NaverAppCloneExpo",
+    "name": "NAVAR",
     "slug": "NaverAppCloneExpo",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,12 +14,6 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
