@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/hooks": "^3.0.0",
     "expo": "~50.0.17",
     "expo-constants": "~15.4.6",
     "expo-linking": "~6.2.2",
