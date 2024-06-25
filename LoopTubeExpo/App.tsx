@@ -67,7 +67,10 @@ const App = () => {
     const html = `
     <!DOCTYPE html>
     <html>
-      <body>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body style="margin: 0; padding: 0;">
         <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
         <div id="player"></div>
 
@@ -137,7 +140,13 @@ const App = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.youtubeContainer}>
-        {youTubeId.length > 0 && <WebView source={source} />}
+        {youTubeId.length > 0 && (
+          <WebView
+            source={source}
+            allowsInlineMediaPlayback
+            mediaPlaybackRequiresUserAction={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
