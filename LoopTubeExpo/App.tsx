@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -44,17 +45,54 @@ const styles = StyleSheet.create({
     height: YT_HEIGHT,
     backgroundColor: '#4A4A4A',
   },
+  controller: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 10,
+    marginHorizontal: 16,
+    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  playButton: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  timerText: {
+    alignSelf: 'flex-end',
+    marginTop: 15,
+    marginRight: 20,
+    color: '#AEAEB2',
+    fontSize: 13,
+  },
 });
 
+const formatTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+  return `${formattedMinutes}:${formattedSeconds}`;
+};
+
 const App = () => {
+  const webViewRef = useRef<WebView | null>(null);
   const [url, setUrl] = useState('');
-  const [youTubeId, setYouTubeId] = useState('');
+  const [youTubeId, setYouTubeId] = useState('mNz9MvKylJ4');
+  const [playing, setPlaying] = useState(false);
+  const [durationInSec, setDurationInSec] = useState(0);
+  const [currentTimeInSec, setCurrentTimeInSec] = useState(0);
 
   const onPressOpenLink = useCallback(() => {
     const {
       query: {v: id},
     } = queryString.parseUrl(url);
-    console.log('id', id);
 
     if (typeof id === 'string') {
       setYouTubeId(id);
@@ -97,23 +135,17 @@ const App = () => {
             });
           }
 
-          // 4. The API will call this function when the video player is ready.
-          function onPlayerReady(event) {
-            event.target.playVideo();
+          function postMessageToRN(type, data) {
+            const message = JSON.stringify({ type, data });
+            window.ReactNativeWebView.postMessage(message);
           }
 
-          // 5. The API calls this function when the player's state changes.
-          //    The function indicates that when playing a video (state=1),
-          //    the player should play for six seconds and then stop.
-          var done = false;
-          function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING && !done) {
-              setTimeout(stopVideo, 6000);
-              done = true;
-            }
+          function onPlayerReady(event) {
+            postMessageToRN('duration', player.getDuration());
           }
-          function stopVideo() {
-            player.stopVideo();
+
+          function onPlayerStateChange(event) {
+            postMessageToRN('player-state', event.data);
           }
         </script>
       </body>
@@ -121,6 +153,43 @@ const App = () => {
     `;
     return {html};
   }, [youTubeId]);
+
+  const onPressPlay = useCallback(() => {
+    if (webViewRef.current != null) {
+      webViewRef.current.injectJavaScript('player.playVideo();');
+    }
+  }, []);
+
+  const onPressPause = useCallback(() => {
+    if (webViewRef.current != null) {
+      webViewRef.current.injectJavaScript('player.pauseVideo();');
+    }
+  }, []);
+
+  const durationText = useMemo(
+    () => formatTime(Math.floor(durationInSec)),
+    [durationInSec],
+  );
+
+  const currentTimeText = useMemo(
+    () => formatTime(Math.floor(currentTimeInSec)),
+    [currentTimeInSec],
+  );
+
+  useEffect(() => {
+    if (playing) {
+      const id = setInterval(() => {
+        if (webViewRef.current != null) {
+          webViewRef.current.injectJavaScript(
+            "postMessageToRN('current-time', player.getCurrentTime());",
+          );
+        }
+      }, 50);
+      return () => {
+        clearInterval(id);
+      };
+    }
+  }, [playing]);
 
   return (
     <SafeAreaView style={styles.safearea}>
@@ -142,10 +211,34 @@ const App = () => {
       <View style={styles.youtubeContainer}>
         {youTubeId.length > 0 && (
           <WebView
+            ref={webViewRef}
             source={source}
             allowsInlineMediaPlayback
             mediaPlaybackRequiresUserAction={false}
+            onMessage={event => {
+              const {type, data} = JSON.parse(event.nativeEvent.data);
+              if (type === 'player-state') {
+                setPlaying(data === 1);
+              } else if (type === 'duration') {
+                setDurationInSec(data);
+              } else if (type === 'current-time') {
+                setCurrentTimeInSec(data);
+              }
+            }}
           />
+        )}
+      </View>
+      <Text
+        style={styles.timerText}>{`${currentTimeText} / ${durationText}`}</Text>
+      <View style={styles.controller}>
+        {playing ? (
+          <TouchableOpacity style={styles.playButton} onPress={onPressPause}>
+            <Icon name="pause-circle" size={41.67} color="#E5E5EA" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.playButton} onPress={onPressPlay}>
+            <Icon name="play-circle" size={39.58} color="#00DDA8" />
+          </TouchableOpacity>
         )}
       </View>
     </SafeAreaView>
