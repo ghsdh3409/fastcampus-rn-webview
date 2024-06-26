@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   Dimensions,
+  PanResponder,
   Platform,
   SafeAreaView,
   StatusBar,
@@ -69,6 +71,25 @@ const styles = StyleSheet.create({
     color: '#AEAEB2',
     fontSize: 13,
   },
+  seekBarBackground: {
+    height: 3,
+    backgroundColor: '#D4D4D4',
+    pointerEvents: 'box-none',
+  },
+  seekBarProgress: {
+    height: 3,
+    backgroundColor: '#00DDA8',
+    width: '0%',
+    pointerEvents: 'none',
+  },
+  seekBarThumb: {
+    width: 14,
+    height: 14,
+    borderRadius: 14 / 2,
+    backgroundColor: '#00DDA8',
+    position: 'absolute',
+    top: (-14 + 3) / 2,
+  },
 });
 
 const formatTime = (seconds: number) => {
@@ -83,6 +104,7 @@ const formatTime = (seconds: number) => {
 
 const App = () => {
   const webViewRef = useRef<WebView | null>(null);
+  const seekBarAnimRef = useRef(new Animated.Value(0));
   const [url, setUrl] = useState('');
   const [youTubeId, setYouTubeId] = useState('mNz9MvKylJ4');
   const [playing, setPlaying] = useState(false);
@@ -191,6 +213,40 @@ const App = () => {
     }
   }, [playing]);
 
+  useEffect(() => {
+    Animated.timing(seekBarAnimRef.current, {
+      toValue: currentTimeInSec,
+      duration: 50,
+      useNativeDriver: false,
+    }).start();
+  }, [currentTimeInSec]);
+
+  const durationInSecRef = useRef(durationInSec);
+  durationInSecRef.current = durationInSec;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        webViewRef.current?.injectJavaScript('player.pauseVideo();');
+      },
+      onPanResponderMove: (event, gestureState) => {
+        const newTimeInSec =
+          (gestureState.moveX / YT_WIDTH) * durationInSecRef.current;
+        seekBarAnimRef.current.setValue(newTimeInSec);
+      },
+      onPanResponderRelease(event, gestureState) {
+        const newTimeInSec =
+          (gestureState.moveX / YT_WIDTH) * durationInSecRef.current;
+        webViewRef.current?.injectJavaScript(
+          `player.seekTo(${newTimeInSec}, true);`,
+        );
+        webViewRef.current?.injectJavaScript('player.playVideo();');
+      },
+    }),
+  ).current;
+
   return (
     <SafeAreaView style={styles.safearea}>
       <View style={styles.inputConatainer}>
@@ -227,6 +283,30 @@ const App = () => {
             }}
           />
         )}
+      </View>
+      <View style={styles.seekBarBackground} {...panResponder.panHandlers}>
+        <Animated.View
+          style={[
+            styles.seekBarProgress,
+            {
+              width: seekBarAnimRef.current.interpolate({
+                inputRange: [0, durationInSec],
+                outputRange: ['0%', '100%'],
+              }),
+            },
+          ]}
+        />
+        <Animated.View
+          style={[
+            styles.seekBarThumb,
+            {
+              left: seekBarAnimRef.current.interpolate({
+                inputRange: [0, durationInSec],
+                outputRange: ['0%', '100%'],
+              }),
+            },
+          ]}
+        />
       </View>
       <Text
         style={styles.timerText}>{`${currentTimeText} / ${durationText}`}</Text>
