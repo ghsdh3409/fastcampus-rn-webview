@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 54,
   },
   timerText: {
     alignSelf: 'flex-end',
@@ -90,6 +91,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: (-14 + 3) / 2,
   },
+  repeat: {
+    width: 14,
+    height: 14,
+    borderRadius: 14 / 2,
+    backgroundColor: 'red',
+    position: 'absolute',
+    top: (-14 + 3) / 2,
+  },
 });
 
 const formatTime = (seconds: number) => {
@@ -110,6 +119,9 @@ const App = () => {
   const [playing, setPlaying] = useState(false);
   const [durationInSec, setDurationInSec] = useState(0);
   const [currentTimeInSec, setCurrentTimeInSec] = useState(0);
+  const [repeatStartInSec, setRepeatStartInSec] = useState<number | null>(null);
+  const [repeatEndInSec, setRepeatEndInSec] = useState<number | null>(null);
+  const [repeated, setRepeated] = useState(false);
 
   const onPressOpenLink = useCallback(() => {
     const {
@@ -247,6 +259,31 @@ const App = () => {
     }),
   ).current;
 
+  const onPressSetRepeatTime = useCallback(() => {
+    if (repeatStartInSec == null) {
+      setRepeatStartInSec(currentTimeInSec);
+    } else if (repeatEndInSec == null) {
+      setRepeatEndInSec(currentTimeInSec);
+    } else {
+      setRepeatStartInSec(null);
+      setRepeatEndInSec(null);
+    }
+  }, [currentTimeInSec, repeatStartInSec, repeatEndInSec]);
+
+  const onPressRepeat = useCallback(() => {
+    setRepeated(prev => !prev);
+  }, []);
+
+  useEffect(() => {
+    if (repeated && repeatStartInSec != null && repeatEndInSec != null) {
+      if (currentTimeInSec > repeatEndInSec) {
+        webViewRef.current?.injectJavaScript(
+          `player.seekTo(${repeatStartInSec}, true);`,
+        );
+      }
+    }
+  }, [repeated, currentTimeInSec, repeatStartInSec, repeatEndInSec]);
+
   return (
     <SafeAreaView style={styles.safearea}>
       <View style={styles.inputConatainer}>
@@ -307,10 +344,29 @@ const App = () => {
             },
           ]}
         />
+        {repeatStartInSec != null && (
+          <View
+            style={[
+              styles.repeat,
+              {left: (repeatStartInSec / durationInSec) * YT_WIDTH},
+            ]}
+          />
+        )}
+        {repeatEndInSec != null && (
+          <View
+            style={[
+              styles.repeat,
+              {left: (repeatEndInSec / durationInSec) * YT_WIDTH},
+            ]}
+          />
+        )}
       </View>
       <Text
         style={styles.timerText}>{`${currentTimeText} / ${durationText}`}</Text>
       <View style={styles.controller}>
+        <TouchableOpacity onPress={onPressSetRepeatTime}>
+          <Icon name="data-array" size={28} color="#D9D9D9" />
+        </TouchableOpacity>
         {playing ? (
           <TouchableOpacity style={styles.playButton} onPress={onPressPause}>
             <Icon name="pause-circle" size={41.67} color="#E5E5EA" />
@@ -320,6 +376,13 @@ const App = () => {
             <Icon name="play-circle" size={39.58} color="#00DDA8" />
           </TouchableOpacity>
         )}
+        <TouchableOpacity onPress={onPressRepeat}>
+          <Icon
+            name="repeat"
+            size={28}
+            color={repeated ? '#00DDA8' : '#D9D9D9'}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
