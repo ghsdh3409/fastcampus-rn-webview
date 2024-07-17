@@ -40,6 +40,25 @@ const Recorder = () => {
     }
   }, [toastVisible]);
 
+  const transcribeAudio = useCallback(
+    async ({ url, ext }: { url: string; ext: string }) => {
+      const response = await fetch(url);
+      const audioBlob = await response.blob();
+
+      const formData = new FormData();
+      formData.append("file", audioBlob, `recording.${ext}`);
+
+      const transcriptionResponse = await fetch("/api/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await transcriptionResponse.json();
+      console.log("data", data);
+    },
+    []
+  );
+
   const onStartRecord = useCallback(() => {
     setTime(0);
     setAudioUrl(null);
@@ -48,13 +67,14 @@ const Recorder = () => {
   }, [startTimer]);
 
   const onStopRecord = useCallback(
-    ({ url }: { url: string }) => {
+    ({ url, ext }: { url: string; ext: string }) => {
       setAudioUrl(url);
       setState(null);
       stopTimer();
       showToast();
+      transcribeAudio({ url, ext });
     },
-    [stopTimer, showToast]
+    [stopTimer, showToast, transcribeAudio]
   );
 
   const record = useCallback(() => {
@@ -76,7 +96,7 @@ const Recorder = () => {
           });
           chunksRef.current = [];
           const url = URL.createObjectURL(blob);
-          onStopRecord({ url });
+          onStopRecord({ url, ext: "webm" });
           stream.getAudioTracks().forEach((track) => track.stop());
         };
         mediaRecorder.start();
