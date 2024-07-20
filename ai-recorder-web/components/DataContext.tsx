@@ -16,6 +16,7 @@ export type Data = {
   id: string;
   text: string;
   scripts: Script[];
+  summary?: string;
 };
 
 type Database = { [id: string]: Data | undefined };
@@ -23,6 +24,7 @@ type Database = { [id: string]: Data | undefined };
 type ScriptContextType = {
   create: (data: Data) => void;
   get: ({ id }: { id: string }) => Data | undefined;
+  update: ({ id, summary }: { id: string; summary?: string }) => void;
 };
 
 const ScriptContext = createContext<ScriptContextType | undefined>(undefined);
@@ -82,6 +84,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  console.log(database);
+
   const create = useCallback((data: Data) => {
     setDatabase((prev) => ({
       ...prev,
@@ -96,8 +100,27 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     [database]
   );
 
+  const update = useCallback(
+    ({ id, summary }: { id: string; summary?: string }) => {
+      setDatabase((prevDatabase) => {
+        const prevData = prevDatabase[id];
+        if (prevData == null) {
+          return prevDatabase;
+        }
+        return {
+          ...prevDatabase,
+          [id]: {
+            ...prevData,
+            ...(summary != null ? { summary } : {}),
+          },
+        };
+      });
+    },
+    []
+  );
+
   return (
-    <ScriptContext.Provider value={{ create, get }}>
+    <ScriptContext.Provider value={{ create, get, update }}>
       {children}
     </ScriptContext.Provider>
   );
