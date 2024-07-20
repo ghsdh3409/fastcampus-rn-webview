@@ -29,11 +29,22 @@ const Tab = ({
 
 const Script = ({
   scripts,
+  onPressSummarize,
 }: {
   scripts: { start: number; end: number; text: string }[];
+  onPressSummarize?: () => void;
 }) => {
   return (
-    <div className="px-[16px] py-[24px]">
+    <div className="flex flex-col px-[16px] py-[24px]">
+      <button
+        className="relative bg-[#09CC7F] mb-[18px] flex justify-center items-center py-[13px] rounded-[6px] text-[16px] font-[700] text-[#FFFFFF]"
+        onClick={onPressSummarize}
+      >
+        요약하기
+        <span className="material-icons text-white text-[24px] absolute right-[17px]">
+          east
+        </span>
+      </button>
       <div className="flex flex-col gap-[18px]">
         {scripts.map((script, index) => {
           return (
@@ -79,6 +90,33 @@ const Recording = () => {
     setFocusedTab("summary");
   }, []);
 
+  const [summarizing, setSummarizing] = useState(false);
+  const onPressSummarize = useCallback(async () => {
+    const text = data?.text;
+
+    if (text == null) {
+      return;
+    }
+
+    setSummarizing(true);
+
+    try {
+      const response = await fetch("/api/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const result = await response.json();
+      console.log("result", result.summary);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSummarizing(false);
+    }
+  }, [data?.text]);
+
+  console.log("summarizing", summarizing);
+
   return (
     <div className="h-screen bg-white flex flex-col">
       <Header title={"음성 기록"} />
@@ -96,7 +134,9 @@ const Recording = () => {
       </div>
 
       <div className="flex-1 overflow-y-scroll overscroll-none">
-        {data?.scripts != null && <Script scripts={data.scripts} />}
+        {data?.scripts != null && (
+          <Script scripts={data.scripts} onPressSummarize={onPressSummarize} />
+        )}
       </div>
     </div>
   );
