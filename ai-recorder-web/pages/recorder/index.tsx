@@ -1,5 +1,7 @@
+import { useDatabase } from "@/components/DataContext";
 import Header from "@/components/Header";
 import { formatTime } from "@/modules/Util";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const Recorder = () => {
@@ -40,6 +42,9 @@ const Recorder = () => {
     }
   }, [toastVisible]);
 
+  const { create } = useDatabase();
+  const router = useRouter();
+
   const transcribeAudio = useCallback(
     async ({ url, ext }: { url: string; ext: string }) => {
       const response = await fetch(url);
@@ -53,10 +58,26 @@ const Recorder = () => {
         body: formData,
       });
 
-      const data = await transcriptionResponse.json();
+      const data = (await transcriptionResponse.json()) as {
+        transcription: {
+          text: string;
+          segments: { start: number; end: number; text: string }[];
+        };
+      };
       console.log("data", data);
+      const id = `${Date.now()}`;
+      create({
+        id,
+        text: data.transcription.text,
+        scripts: data.transcription.segments.map((seg) => ({
+          start: seg.start,
+          end: seg.end,
+          text: seg.text.trim(),
+        })),
+      });
+      router.push(`/recording/${id}`);
     },
-    []
+    [create, router]
   );
 
   const onStartRecord = useCallback(() => {
