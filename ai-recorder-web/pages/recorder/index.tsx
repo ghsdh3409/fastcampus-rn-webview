@@ -4,6 +4,23 @@ import { formatTime } from "@/modules/Util";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+function base64ToBlob(base64: string, mimeType: string) {
+  const byteCharacters = atob(base64);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: mimeType });
+}
+
 const Recorder = () => {
   const [state, setState] = useState<"recording" | "paused" | null>(null);
   const [toastVisible, setToastVisible] = useState(false);
@@ -98,7 +115,66 @@ const Recorder = () => {
     [stopTimer, showToast, transcribeAudio]
   );
 
+  const onPauseRecord = useCallback(() => {
+    stopTimer();
+    setState("paused");
+  }, [stopTimer]);
+
+  const onResumeRecord = useCallback(() => {
+    startTimer();
+    setState("recording");
+  }, [startTimer]);
+
+  const hasReactNativeWebview =
+    typeof window != "undefined" && window.ReactNativeWebView != null;
+
+  const postMessageToRN = useCallback(
+    ({ type, data }: { type: string; data?: any }) => {
+      window.ReactNativeWebView?.postMessage(JSON.stringify({ type, data }));
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (hasReactNativeWebview) {
+      const handleMessage = (event: any) => {
+        console.log("handleMessage", event);
+        const { type, data } = JSON.parse(event.data);
+        if (type === "onStartRecord") {
+          onStartRecord();
+        } else if (type === "onStopRecord") {
+          const { audio, mimeType, ext } = data;
+          const blob = base64ToBlob(audio, mimeType);
+          const url = URL.createObjectURL(blob);
+
+          onStopRecord({ url, ext });
+        } else if (type === "onPauseRecord") {
+          onPauseRecord();
+        } else if (type === "onResumeRecord") {
+          onResumeRecord();
+        }
+      };
+      window.addEventListener("message", handleMessage);
+      document.addEventListener("message", handleMessage);
+      return () => {
+        window.removeEventListener("message", handleMessage);
+        document.removeEventListener("message", handleMessage);
+      };
+    }
+  }, [
+    hasReactNativeWebview,
+    onStartRecord,
+    onStopRecord,
+    onPauseRecord,
+    onResumeRecord,
+  ]);
+
   const record = useCallback(() => {
+    if (hasReactNativeWebview) {
+      postMessageToRN({ type: "start-record" });
+      return;
+    }
+
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: false })
       .then((stream) => {
@@ -122,25 +198,40 @@ const Recorder = () => {
         };
         mediaRecorder.start();
       });
-  }, [onStartRecord, onStopRecord]);
+  }, [onStartRecord, onStopRecord, hasReactNativeWebview, postMessageToRN]);
 
   const stop = useCallback(() => {
+    if (hasReactNativeWebview) {
+      postMessageToRN({ type: "stop-record" });
+      return;
+    }
+
     if (mediaRecorderRef.current != null) {
       mediaRecorderRef.current.stop();
     }
-  }, []);
+  }, [hasReactNativeWebview, postMessageToRN]);
 
   const pause = useCallback(() => {
+    if (hasReactNativeWebview) {
+      postMessageToRN({ type: "pause-record" });
+      return;
+    }
+
     if (mediaRecorderRef.current != null) {
       mediaRecorderRef.current.pause();
     }
-  }, []);
+  }, [hasReactNativeWebview, postMessageToRN]);
 
   const resume = useCallback(() => {
+    if (hasReactNativeWebview) {
+      postMessageToRN({ type: "resume-record" });
+      return;
+    }
+
     if (mediaRecorderRef.current != null) {
       mediaRecorderRef.current.resume();
     }
-  }, []);
+  }, [hasReactNativeWebview, postMessageToRN]);
 
   const onPressRecord = useCallback(() => {
     record();
@@ -153,14 +244,12 @@ const Recorder = () => {
   const onPressPause = useCallback(() => {
     if (state === "recording") {
       pause();
-      stopTimer();
-      setState("paused");
+      onPauseRecord();
     } else if (state === "paused") {
       resume();
-      startTimer();
-      setState("recording");
+      onResumeRecord();
     }
-  }, [pause, startTimer, stopTimer, resume, state]);
+  }, [pause, resume, state, onPauseRecord, onResumeRecord]);
 
   return (
     <div className="h-screen bg-white flex flex-col">
