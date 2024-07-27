@@ -15,6 +15,7 @@ import WebView from 'react-native-webview';
 import Permission from 'react-native-permissions';
 import RNFS from 'react-native-fs';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -47,6 +48,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
+
+const DATABASE_KEY = 'database';
 
 const App = () => {
   const webViewRef = useRef<WebView | null>(null);
@@ -146,6 +149,20 @@ const App = () => {
     }
   }, [sendMessageToWebview]);
 
+  const loadDatabase = useCallback(async () => {
+    const stringifiedDatabase = await AsyncStorage.getItem(DATABASE_KEY);
+    const database =
+      stringifiedDatabase != null ? JSON.parse(stringifiedDatabase) : {};
+    sendMessageToWebview({
+      type: 'onLoadDatabase',
+      data: database,
+    });
+  }, [sendMessageToWebview]);
+
+  const saveDatabase = useCallback(async (database: any) => {
+    await AsyncStorage.setItem(DATABASE_KEY, JSON.stringify(database));
+  }, []);
+
   return (
     <SafeAreaView style={styles.safearea}>
       <WebView
@@ -158,7 +175,7 @@ const App = () => {
         }}
         onMessage={event => {
           console.log(event.nativeEvent.data);
-          const {type} = JSON.parse(event.nativeEvent.data);
+          const {type, data} = JSON.parse(event.nativeEvent.data);
           if (type === 'start-record') {
             startRecord();
           } else if (type === 'stop-record') {
@@ -169,6 +186,10 @@ const App = () => {
             resumeRecord();
           } else if (type === 'open-camera') {
             openCamera();
+          } else if (type === 'load-database') {
+            loadDatabase();
+          } else if (type === 'save-database') {
+            saveDatabase(data);
           }
         }}
         webviewDebuggingEnabled
