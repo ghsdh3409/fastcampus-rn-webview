@@ -93,6 +93,7 @@ const Recorder = () => {
           text: seg.text.trim(),
         })),
         photos,
+        createdAt: Date.now(),
       });
       router.push(`/recording/${id}`);
     },
