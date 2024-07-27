@@ -1,5 +1,12 @@
-import React, {useCallback, useRef} from 'react';
-import {Platform, SafeAreaView, StyleSheet} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AudioRecorderPlayer, {
   AVEncodingOption,
   OutputFormatAndroidType,
@@ -7,16 +14,47 @@ import AudioRecorderPlayer, {
 import WebView from 'react-native-webview';
 import Permission from 'react-native-permissions';
 import RNFS from 'react-native-fs';
+import {Camera, useCameraDevice} from 'react-native-vision-camera';
 
 const styles = StyleSheet.create({
   safearea: {
     flex: 1,
+  },
+  camera: {
+    backgroundColor: 'black',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  cameraCloseButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+  },
+  cameraCloseText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  cameraPhotoButton: {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
+    bottom: 60,
+    backgroundColor: 'white',
+    alignSelf: 'center',
   },
 });
 
 const App = () => {
   const webViewRef = useRef<WebView | null>(null);
   const audioRecorderPlayerRef = useRef(new AudioRecorderPlayer());
+  const device = useCameraDevice('back');
+  const cameraRef = useRef<Camera>(null);
+
+  const [isCameraOn, setIsCameraOn] = useState(false);
 
   const sendMessageToWebview = useCallback(
     ({type, data}: {type: string; data?: any}) => {
@@ -83,6 +121,31 @@ const App = () => {
     sendMessageToWebview({type: 'onResumeRecord'});
   }, [sendMessageToWebview]);
 
+  const openCamera = useCallback(async () => {
+    const permission = await Camera.requestCameraPermission();
+    if (permission === 'granted') {
+      setIsCameraOn(true);
+    }
+  }, []);
+
+  const closeCamera = useCallback(() => {
+    setIsCameraOn(false);
+  }, []);
+  const onPressPhotoButton = useCallback(async () => {
+    const file = await cameraRef.current?.takePhoto({
+      flash: 'off',
+    });
+    console.log('file', file);
+    if (file != null) {
+      const base64Image = await RNFS.readFile(file.path, 'base64');
+      const imageDataUrl = `data:image/jpeg;base64,${base64Image}`;
+      sendMessageToWebview({
+        type: 'onTakePhoto',
+        data: imageDataUrl,
+      });
+    }
+  }, [sendMessageToWebview]);
+
   return (
     <SafeAreaView style={styles.safearea}>
       <WebView
@@ -104,10 +167,33 @@ const App = () => {
             pauseRecord();
           } else if (type === 'resume-record') {
             resumeRecord();
+          } else if (type === 'open-camera') {
+            openCamera();
           }
         }}
         webviewDebuggingEnabled
       />
+      {isCameraOn && device != null && (
+        <View style={styles.camera}>
+          <Camera
+            ref={cameraRef}
+            device={device}
+            photo
+            isActive
+            photoQualityBalance="speed"
+            style={StyleSheet.absoluteFill}
+          />
+          <TouchableOpacity
+            style={styles.cameraCloseButton}
+            onPress={closeCamera}>
+            <Text style={styles.cameraCloseText}>CLOSE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.cameraPhotoButton}
+            onPress={onPressPhotoButton}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

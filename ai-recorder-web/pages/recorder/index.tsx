@@ -26,6 +26,7 @@ const Recorder = () => {
   const [toastVisible, setToastVisible] = useState(false);
   const [time, setTime] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<string[]>([]);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -91,10 +92,11 @@ const Recorder = () => {
           end: seg.end,
           text: seg.text.trim(),
         })),
+        photos,
       });
       router.push(`/recording/${id}`);
     },
-    [create, router]
+    [create, router, photos]
   );
 
   const onStartRecord = useCallback(() => {
@@ -152,6 +154,8 @@ const Recorder = () => {
           onPauseRecord();
         } else if (type === "onResumeRecord") {
           onResumeRecord();
+        } else if (type === "onTakePhoto") {
+          setPhotos((prev) => prev.concat([data]));
         }
       };
       window.addEventListener("message", handleMessage);
@@ -251,9 +255,27 @@ const Recorder = () => {
     }
   }, [pause, resume, state, onPauseRecord, onResumeRecord]);
 
+  const onPressCamera = useCallback(() => {
+    postMessageToRN({ type: "open-camera" });
+  }, [postMessageToRN]);
+
   return (
     <div className="h-screen bg-white flex flex-col">
-      <Header title="녹음하기" />
+      <Header
+        title="녹음하기"
+        renderRight={() => {
+          if (!hasReactNativeWebview) {
+            return <></>;
+          }
+          return (
+            <button className="mr-[16px]" onClick={onPressCamera}>
+              <span className="material-icons text-[#8E8E93] text-[30px]">
+                photo_camera
+              </span>
+            </button>
+          );
+        }}
+      />
       <div className="flex flex-1 flex-col items-center pt-[211px]">
         {state === "recording" ? (
           <button
