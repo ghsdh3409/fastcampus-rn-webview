@@ -1,4 +1,4 @@
-package com.airecorderapp
+package com.daehoon.airecorderapp
 
 import android.app.Application
 import com.facebook.react.PackageList

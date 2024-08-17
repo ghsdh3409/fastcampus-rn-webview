@@ -1,4 +1,4 @@
-package com.airecorderapp
+package com.daehoon.airecorderapp
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
