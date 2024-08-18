@@ -2,7 +2,7 @@
   "expo": {
     "name": "AiRecorderAppExpo",
     "slug": "AiRecorderAppExpo",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,10 +18,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.daehoon.airecorderappexpo",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6d5cb8f4-3e29-43f1-969f-f82ebede6db1"
+      }
+    },
+    "owner": "daehoon.dev"
   }
 }
