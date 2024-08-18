@@ -1,0 +1,8 @@
+app_identifier("com.daehoon.airecorderapp") # The bundle identifier of your app
+apple_id("daehoon.dev@gmail.com") # Your Apple Developer Portal username
+
+itc_team_id("125735756") # App Store Connect Team ID
+team_id("RZFQ32V29C") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

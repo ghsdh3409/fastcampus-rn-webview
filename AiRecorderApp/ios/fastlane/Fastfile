@@ -1,0 +1,39 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    app_store_connect_api_key(
+      key_id: "GGK4D7X73A",
+      issuer_id: "61afe6ea-49f1-4468-b65d-704d54a07e66",
+      key_filepath: "./fastlane/key/AuthKey_GGK4D7X73A.p8",
+      duration: 1200, # optional (maximum 1200)
+      in_house: false, # optional but may be required if using match/sigh // Is App Store or Enterprise (in house) team? App Store Connect API cannot determine this on its own (yet)
+    )
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    match(type: "appstore", git_url: "https://github.com/ghsdh3409/airecorder-cert")
+    build_app(workspace: "AiRecorderApp.xcworkspace", scheme: "AiRecorderApp", configuration: "Release")
+    upload_to_app_store(
+      submit_for_review: false,
+      force: true,
+      precheck_include_in_app_purchases: false, #  Precheck cannot check In-app purchases with the App Store Connect API Key (yet). Exclude In-app purchases from precheck, disable the precheck step in your build step, or use Apple ID login
+    )
+  end
+end
