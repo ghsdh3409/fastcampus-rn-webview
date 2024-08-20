@@ -32,7 +32,7 @@ const Home = () => {
             >
               <div className="mr-[14px]">
                 <div className="w-[28px] h-[28px] rounded-[14px] bg-[#09CC7F] items-center justify-center flex">
-                  <span className="material-icons text-[#FFFFFF] text-[18px]">
+                  <span className="material-icons text-[#FFFFFF] !text-[18px]">
                     mic
                   </span>
                 </div>
@@ -54,7 +54,7 @@ const Home = () => {
         className="bg-black py-[10px] px-[18px] rounded-[25px] flex items-center absolute bottom-[29px] right-[16px]"
         onClick={onClickRecord}
       >
-        <span className="material-icons text-white text-[24px]">mic</span>
+        <span className="material-icons text-white !text-[24px]">mic</span>
         <span className="text-white text-[14px] ml-[3px]">녹음하기</span>
       </button>
     </div>

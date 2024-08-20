@@ -270,7 +270,7 @@ const Recorder = () => {
           }
           return (
             <button className="mr-[16px]" onClick={onPressCamera}>
-              <span className="material-icons text-[#8E8E93] text-[30px]">
+              <span className="material-icons text-[#8E8E93] !text-[30px]">
                 photo_camera
               </span>
             </button>
@@ -283,21 +283,23 @@ const Recorder = () => {
             className="w-[120px] h-[120px] rounded-[80px] bg-[#1A1A1A]"
             onClick={onPressPause}
           >
-            <span className="material-icons text-white text-[70px]">mic</span>
+            <span className="material-icons text-white !text-[70px]">mic</span>
           </button>
         ) : state === "paused" ? (
           <button
             className="w-[120px] h-[120px] rounded-[80px] bg-[#1A1A1A]"
             onClick={onPressPause}
           >
-            <span className="material-icons text-white text-[70px]">pause</span>
+            <span className="material-icons text-white !text-[70px]">
+              pause
+            </span>
           </button>
         ) : (
           <button
             className="w-[120px] h-[120px] rounded-[80px] bg-[#1A1A1A]"
             onClick={onPressRecord}
           >
-            <span className="material-icons text-[#09CC7F] text-[70px]">
+            <span className="material-icons text-[#09CC7F] !text-[70px]">
               mic
             </span>
           </button>
@@ -316,7 +318,9 @@ const Recorder = () => {
             className="mt-[42px] bg-[#1A1A1A] rounded-[27px] px-[42px] py-[16px] items-center flex"
             onClick={onPressPause}
           >
-            <span className="material-icons text-white text-[20px]">pause</span>
+            <span className="material-icons text-white !text-[20px]">
+              pause
+            </span>
             <span className="ml-[4px] text-[15px] text-white font-[600]">
               일시 정지
             </span>
@@ -329,7 +333,9 @@ const Recorder = () => {
             } bg-[#09CC7F] rounded-[27px] px-[42px] py-[16px] items-center flex`}
             onClick={onPressSave}
           >
-            <span className="material-icons text-white text-[20px]">check</span>
+            <span className="material-icons text-white !text-[20px]">
+              check
+            </span>
             <span className="ml-[4px] text-[15px] text-white font-[600]">
               저장 하기
             </span>
@@ -337,7 +343,7 @@ const Recorder = () => {
         )}
         {toastVisible && (
           <div className="absolute bottom-[21px] flex border-[1.5px] border-[#09CC7F] w-[358px] py-[13px] px-[17px] rounded-[6px] bg-[#F9FEFF]">
-            <span className="material-icons text-[#00DDA8] text-[24px]">
+            <span className="material-icons text-[#00DDA8] !text-[24px]">
               check
             </span>
             <p className="ml-[7px] text-[15px] font-[600] text-[#4A4A4A]">

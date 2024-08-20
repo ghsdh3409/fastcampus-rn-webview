@@ -148,7 +148,7 @@ const Recording = () => {
           }
           return (
             <button className="mr-[16px]" onClick={onPressImageButton}>
-              <span className="material-icons text-[#8E8E93] text-[30px]">
+              <span className="material-icons text-[#8E8E93] !text-[30px]">
                 image
               </span>
             </button>
@@ -173,7 +173,7 @@ const Recording = () => {
           onClick={onPressSummarize}
         >
           요약하기
-          <span className="material-icons text-white text-[24px] absolute right-[17px]">
+          <span className="material-icons text-white !text-[24px] absolute right-[17px]">
             east
           </span>
         </button>
