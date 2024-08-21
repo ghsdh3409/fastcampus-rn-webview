@@ -168,10 +168,7 @@ const App = () => {
       <WebView
         ref={webViewRef}
         source={{
-          uri:
-            Platform.OS === 'android'
-              ? 'http://10.0.2.2:3000'
-              : 'http://localhost:3000',
+          uri: 'https://ai-recorder-web.vercel.app/',
         }}
         onMessage={event => {
           console.log(event.nativeEvent.data);
