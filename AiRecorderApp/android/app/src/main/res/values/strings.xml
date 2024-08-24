@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AiRecorderApp</string>
+  <string name="app_name">AiRecorderApp</string>
+  <string name="expo_runtime_version">1.0.0</string>
 </resources>

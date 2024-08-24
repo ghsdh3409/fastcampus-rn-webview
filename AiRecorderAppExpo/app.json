@@ -32,6 +32,12 @@
         "projectId": "6d5cb8f4-3e29-43f1-969f-f82ebede6db1"
       }
     },
-    "owner": "daehoon.dev"
+    "owner": "daehoon.dev",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6d5cb8f4-3e29-43f1-969f-f82ebede6db1"
+    }
   }
 }

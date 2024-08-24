@@ -2,6 +2,41 @@ PODS:
   - boost (1.83.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - EASClient (0.11.2):
+    - ExpoModulesCore
+  - EXConstants (15.4.6):
+    - ExpoModulesCore
+  - EXFont (11.10.3):
+    - ExpoModulesCore
+  - EXJSONUtils (0.12.3)
+  - EXManifests (0.13.2):
+    - ExpoModulesCore
+  - Expo (50.0.20):
+    - ExpoModulesCore
+  - ExpoFileSystem (16.0.9):
+    - ExpoModulesCore
+  - ExpoKeepAwake (12.8.2):
+    - ExpoModulesCore
+  - ExpoModulesCore (1.11.13):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - React-NativeModulesApple
+    - React-RCTAppDelegate
+    - ReactCommon/turbomodule/core
+  - EXStructuredHeaders (3.7.2)
+  - EXUpdates (0.24.13):
+    - EASClient
+    - EXManifests
+    - ExpoModulesCore
+    - EXStructuredHeaders
+    - EXUpdatesInterface
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - ReachabilitySwift
+    - React-Core
+    - sqlite3 (~> 3.42.0)
+  - EXUpdatesInterface (0.15.3)
   - FBLazyVector (0.73.6)
   - FBReactNativeSpec (0.73.6):
     - RCT-Folly (= 2022.05.16.00)
@@ -100,6 +135,7 @@ PODS:
     - FBLazyVector (= 0.73.6)
     - RCTRequired (= 0.73.6)
     - React-Core (= 0.73.6)
+  - ReachabilitySwift (5.2.3)
   - React (0.73.6):
     - React-Core (= 0.73.6)
     - React-Core/DevSupport (= 0.73.6)
@@ -1124,6 +1160,9 @@ PODS:
   - RNPermissions (4.1.5):
     - React-Core
   - SocketRocket (0.6.1)
+  - sqlite3 (3.42.0):
+    - sqlite3/common (= 3.42.0)
+  - sqlite3/common (3.42.0)
   - VisionCamera (4.5.0):
     - VisionCamera/Core (= 4.5.0)
     - VisionCamera/React (= 4.5.0)
@@ -1135,6 +1174,18 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EASClient (from `../node_modules/expo-eas-client/ios`)
+  - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXFont (from `../node_modules/expo-font/ios`)
+  - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
+  - EXManifests (from `../node_modules/expo-manifests/ios`)
+  - Expo (from `../node_modules/expo`)
+  - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
+  - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
+  - EXUpdates (from `../node_modules/expo-updates/ios`)
+  - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Flipper (= 0.201.0)
@@ -1227,13 +1278,39 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - ReachabilitySwift
     - SocketRocket
+    - sqlite3
 
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EASClient:
+    :path: "../node_modules/expo-eas-client/ios"
+  EXConstants:
+    :path: "../node_modules/expo-constants/ios"
+  EXFont:
+    :path: "../node_modules/expo-font/ios"
+  EXJSONUtils:
+    :path: "../node_modules/expo-json-utils/ios"
+  EXManifests:
+    :path: "../node_modules/expo-manifests/ios"
+  Expo:
+    :path: "../node_modules/expo"
+  ExpoFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
+  ExpoKeepAwake:
+    :path: "../node_modules/expo-keep-awake/ios"
+  ExpoModulesCore:
+    :path: "../node_modules/expo-modules-core"
+  EXStructuredHeaders:
+    :path: "../node_modules/expo-structured-headers/ios"
+  EXUpdates:
+    :path: "../node_modules/expo-updates/ios"
+  EXUpdatesInterface:
+    :path: "../node_modules/expo-updates-interface/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -1344,6 +1421,18 @@ SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  EASClient: a42ee8bf36c93b3128352faf2ae49405ab4f80bd
+  EXConstants: a5f6276e565d98f9eb4280f81241fc342d641590
+  EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
+  EXJSONUtils: 5c42959e87be238b045ef37cc5268b16a6c0ad4a
+  EXManifests: 5e8c29f36c716af768a4ea47ec05e1b89ab93091
+  Expo: d86f597bbab83615207499c5b3bfd80992e2bbd3
+  ExpoFileSystem: 74cc0fae916f9f044248433971dcfc8c3befd057
+  ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
+  ExpoModulesCore: 4a8928a228569301ac4fc4a1e846713e05754d05
+  EXStructuredHeaders: 5b0f47259db047dc1fdfa84752e292c2bfa68ecd
+  EXUpdates: 4aa99ef9610e0d6fbf80d7f2b3f169b527f24a1d
+  EXUpdatesInterface: 3e444e2093e25b7ca0999a7d8c16e8392dee70c3
   FBLazyVector: f64d1e2ea739b4d8f7e4740cde18089cd97fe864
   FBReactNativeSpec: 9f2b8b243131565335437dba74923a8d3015e780
   Flipper: c7a0093234c4bdd456e363f2f19b2e4b27652d44
@@ -1362,6 +1451,7 @@ SPEC CHECKSUMS:
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: ca1d7414aba0b27efcfa2ccd37637edb1ab77d96
   RCTTypeSafety: 678e344fb976ff98343ca61dc62e151f3a042292
+  ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
   React: e296bcebb489deaad87326067204eb74145934ab
   React-callinvoker: d0b7015973fa6ccb592bb0363f6bc2164238ab8c
   React-Codegen: f034a5de6f28e15e8d95d171df17e581d5309268
@@ -1406,9 +1496,10 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNPermissions: f9a0380dad4d370b6b983acaf4f9bff07aba9a21
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  sqlite3: f163dbbb7aa3339ad8fc622782c2d9d7b72f7e9c
   VisionCamera: 412fec057156eb5fe84a44351e8ed71a072c1228
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: 80b7977d65346e021307f0a4f65a45e8dc9dad04
+PODFILE CHECKSUM: 7cce8a1264896b5b96379a1aa1e6251e84aa8053
 
 COCOAPODS: 1.14.3
