@@ -12,6 +12,9 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
+require 'json'
+podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}
+
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -69,6 +72,7 @@ target 'AiRecorderApp' do
 
   use_react_native!(
     :path => config[:reactNativePath],
+    :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',
     # Enables Flipper.
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and

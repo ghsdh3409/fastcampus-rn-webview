@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00D2C4702C7A0B6E0003B7F7 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 00D2C46E2C7A0B6E0003B7F7 /* Expo.plist */; };
 		00E356F31AD99517003FC87E /* AiRecorderAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AiRecorderAppTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-AiRecorderApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-AiRecorderApp.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00D2C46E2C7A0B6E0003B7F7 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* AiRecorderAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AiRecorderAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AiRecorderAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AiRecorderAppTests.m; sourceTree = "<group>"; };
@@ -70,6 +72,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00D2C46F2C7A0B6E0003B7F7 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				00D2C46E2C7A0B6E0003B7F7 /* Expo.plist */,
+			);
+			name = Supporting;
+			path = AiRecorderApp/Supporting;
+			sourceTree = "<group>";
+		};
 		00E356EF1AD99517003FC87E /* AiRecorderAppTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +101,7 @@
 		13B07FAE1A68108700A75B9A /* AiRecorderApp */ = {
 			isa = PBXGroup;
 			children = (
+				00D2C46F2C7A0B6E0003B7F7 /* Supporting */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -273,6 +285,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00D2C4702C7A0B6E0003B7F7 /* Expo.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
