@@ -1,5 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import useEASUpdate from './useEASUpdate';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +21,8 @@ const styles = StyleSheet.create({
 });
 
 const UpdateScreen = () => {
-  const isVisible = true;
+  const {isLoading, updateAvailable} = useEASUpdate();
+  const isVisible = updateAvailable && isLoading;
 
   if (isVisible) {
     return (

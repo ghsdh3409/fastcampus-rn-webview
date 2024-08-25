@@ -17,6 +17,7 @@ import RNFS from 'react-native-fs';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UpdateScreen from './src/UpdateScreen';
+import {version} from './package.json';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -47,6 +48,10 @@ const styles = StyleSheet.create({
     bottom: 60,
     backgroundColor: 'white',
     alignSelf: 'center',
+  },
+  versionText: {
+    alignSelf: 'flex-end',
+    marginRight: 10,
   },
 });
 
@@ -166,6 +171,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.safearea}>
+      <Text style={styles.versionText}>{version}</Text>
       <WebView
         ref={webViewRef}
         source={{
