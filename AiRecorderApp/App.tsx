@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
   versionText: {
     alignSelf: 'flex-end',
     marginRight: 10,
+    backgroundColor: 'white',
+    color: 'black',
   },
 });
 
