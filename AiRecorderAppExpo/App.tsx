@@ -14,6 +14,7 @@ import {RecordingOptionsPresets} from 'expo-av/build/Audio';
 import * as FileSystem from 'expo-file-system';
 import {CameraView, useCameraPermissions} from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UpdateScreen from './src/UpdateScreen';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -209,6 +210,7 @@ const App = () => {
           </CameraView>
         </View>
       )}
+      <UpdateScreen />
     </SafeAreaView>
   );
 };

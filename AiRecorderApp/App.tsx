@@ -16,6 +16,7 @@ import Permission from 'react-native-permissions';
 import RNFS from 'react-native-fs';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UpdateScreen from './src/UpdateScreen';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -212,6 +213,7 @@ const App = () => {
           />
         </View>
       )}
+      <UpdateScreen />
     </SafeAreaView>
   );
 };
