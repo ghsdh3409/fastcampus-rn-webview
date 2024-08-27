@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services' 
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -89,8 +90,8 @@ android {
         applicationId "com.daehoon.airecorderapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.3"
+        versionCode 6
+        versionName "1.5"
     }
     signingConfigs {
         debug {

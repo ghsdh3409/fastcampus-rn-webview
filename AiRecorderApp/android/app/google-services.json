@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "699178456391",
+    "project_id": "airecorderapp",
+    "storage_bucket": "airecorderapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699178456391:android:e61b70d5e716ed3d306862",
+        "android_client_info": {
+          "package_name": "com.daehoon.airecorderapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlUKydGu8jhnvCAsfsXRfKpBVxXOoaQGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

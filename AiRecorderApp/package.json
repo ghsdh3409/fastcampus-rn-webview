@@ -1,6 +1,6 @@
 {
   "name": "AiRecorderApp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",
+    "@react-native-firebase/app": "^20.4.0",
+    "@react-native-firebase/messaging": "^20.4.0",
+    "axios": "^1.7.5",
     "expo": "^50.0.0",
     "expo-updates": "~0.24.13",
     "react": "18.2.0",
