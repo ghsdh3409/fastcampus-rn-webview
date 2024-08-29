@@ -69,3 +69,6 @@ yarn-error.log
 .expo
 dist/
 web-build/
+
+# google service account
+android/airecorder-0b11fb3d187e.json

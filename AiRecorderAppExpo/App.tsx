@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Platform,
   SafeAreaView,
@@ -14,8 +14,10 @@ import {RecordingOptionsPresets} from 'expo-av/build/Audio';
 import * as FileSystem from 'expo-file-system';
 import {CameraView, useCameraPermissions} from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import UpdateScreen from './src/UpdateScreen';
 import {version} from './package.json';
+import usePushNotification from './src/usePushNotification';
 
 const styles = StyleSheet.create({
   safearea: {
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
 const DATABASE_KEY = 'database';
 
 const App = () => {
+  const {expoPushToken} = usePushNotification();
   const webViewRef = useRef<WebView | null>(null);
   const [audioPermissionResponse, requestAudioPermission] =
     Audio.usePermissions();
@@ -172,6 +175,14 @@ const App = () => {
   const saveDatabase = useCallback(async (database: any) => {
     await AsyncStorage.setItem(DATABASE_KEY, JSON.stringify(database));
   }, []);
+
+  useEffect(() => {
+    if (expoPushToken != null) {
+      axios.post('https://updatetoken-mx4ra5mtaa-uc.a.run.app', {
+        token: expoPushToken,
+      });
+    }
+  }, [expoPushToken]);
 
   return (
     <SafeAreaView style={styles.safearea}>

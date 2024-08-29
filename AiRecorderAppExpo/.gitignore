@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# google service account
+airecorder-0b11fb3d187e.json
+airecroderappexpo-firebase-adminsdk-7drab-8ef412de01.json

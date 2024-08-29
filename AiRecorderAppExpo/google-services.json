@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "40083153370",
+    "project_id": "airecroderappexpo",
+    "storage_bucket": "airecroderappexpo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40083153370:android:3a8ed3c96daaa2bca6e0e3",
+        "android_client_info": {
+          "package_name": "com.daehoon.airecorderappexpo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCalArj2scgJDabo2WHzTI-9l44PWLvGyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
